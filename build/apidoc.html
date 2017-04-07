@@ -1,0 +1,248 @@
+<div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a
+
+        href="https://github.com/mklabs/tiny-lr"
+
+    >tiny-lr (v1.0.3)</a>
+</h1>
+<h4>Tiny LiveReload server, background-friendly</h4>
+<div class="apidocSectionDiv"><a
+    href="#apidoc.tableOfContents"
+    id="apidoc.tableOfContents"
+><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.tiny-lr">module tiny-lr</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.tiny-lr.Client">
+            function <span class="apidocSignatureSpan">tiny-lr.</span>Client
+            <span class="apidocSignatureSpan">(req, socket, head)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.tiny-lr.Server">
+            function <span class="apidocSignatureSpan">tiny-lr.</span>Server
+            <span class="apidocSignatureSpan">()</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.tiny-lr.changed">
+            function <span class="apidocSignatureSpan">tiny-lr.</span>changed
+            <span class="apidocSignatureSpan">(done)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.tiny-lr.middleware">
+            function <span class="apidocSignatureSpan">tiny-lr.</span>middleware
+            <span class="apidocSignatureSpan">(opts)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.tiny-lr" id="apidoc.module.tiny-lr">module tiny-lr</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.tiny-lr.Client" id="apidoc.element.tiny-lr.Client">
+        function <span class="apidocSignatureSpan">tiny-lr.</span>Client
+        <span class="apidocSignatureSpan">(req, socket, head)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function Client(req, socket, head) {
+  var options = arguments.length &#x3e; 3 &#x26;&#x26; arguments[3] !== undefined ? arguments[3] : {};
+
+  _classCallCheck(this, Client);
+
+  var _this = _possibleConstructorReturn(this, (Client.__proto__ || Object.getPrototypeOf(Client)).call(this));
+
+  _this.options = options;
+  _this.ws = new _fayeWebsocket2.default(req, socket, head);
+  _this.ws.onmessage = _this.message.bind(_this);
+  _this.ws.onclose = _this.close.bind(_this);
+  _this.id = _this.uniqueId(&#x27;ws&#x27;);
+  return _this;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.tiny-lr.Server" id="apidoc.element.tiny-lr.Server">
+        function <span class="apidocSignatureSpan">tiny-lr.</span>Server
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function Server() {
+  var options = arguments.length &#x3e; 0 &#x26;&#x26; arguments[0] !== undefined ? arguments[0] : {};
+
+  _classCallCheck(this, Server);
+
+  var _this = _possibleConstructorReturn(this, (Server.__proto__ || Object.getPrototypeOf(Server)).call(this));
+
+  _this.options = options;
+
+  options.livereload = options.livereload || require.resolve(&#x27;livereload-js/dist/livereload.js&#x27;);
+
+  // todo: change falsy check to allow 0 for random port
+  options.port = parseInt(options.port || 35729, 10);
+
+  if (options.errorListener) {
+    _this.errorListener = options.errorListener;
+  }
+
+  _this.clients = {};
+  _this.configure(options.app);
+  _this.routes(options.app);
+  return _this;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+```js
+var tinylr = require(&#x27;tiny-lr&#x27;);
+
+// standard LiveReload port
+var port = 35729;
+
+// tinylr(opts) =&#x3e; new tinylr.<span class="apidocCodeKeywordSpan">Server</span>(opts);
+tinylr().listen(port, function() {
+  console.log(&#x27;... Listening on %s ...&#x27;, port);
+})
+```
+
+You can define your own route and listen for a specific request:
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.tiny-lr.changed" id="apidoc.element.tiny-lr.changed">
+        function <span class="apidocSignatureSpan">tiny-lr.</span>changed
+        <span class="apidocSignatureSpan">(done)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function changed(done) {
+  var files = [].slice.call(arguments);
+  if (files[files.length - 1] === &#x27;function&#x27;) done = files.pop();
+  done = typeof done === &#x27;function&#x27; ? done : function () {};
+  debug(&#x27;Notifying %d servers - Files: &#x27;, servers.length, files);
+  servers.forEach(function (srv) {
+    var params = { params: { files: files } };
+    srv &#x26;&#x26; srv.changed(params);
+  });
+  done();
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.tiny-lr.middleware" id="apidoc.element.tiny-lr.middleware">
+        function <span class="apidocSignatureSpan">tiny-lr.</span>middleware
+        <span class="apidocSignatureSpan">(opts)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function middleware(opts) {
+  var srv = new _server2.default(opts);
+  servers.push(srv);
+  return function tinylr(req, res, next) {
+    srv.handler(req, res, next);
+  };
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+var app = express();
+
+// This binds both express app and tinylr on the same port
+
+app
+  .use(body())
+  .use(tinylr.<span class="apidocCodeKeywordSpan">middleware</span>({ app: app }))
+  .use(express.static(path.resolve(&#x27;./&#x27;)))
+  .listen(port, function() {
+    console.log(&#x27;listening on %d&#x27;, port);
+  });
+```
+
+The port you listen on is important, and tinylr should **always** listen on
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
